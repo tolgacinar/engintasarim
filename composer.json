@@ -1,0 +1,8 @@
+{
+    "require": {
+        "kenjis/codeigniter-ss-twig": "1.0"
+    },
+    "config": {
+        "vendor-dir": "system/codeigniter/vendor"
+    }
+}
