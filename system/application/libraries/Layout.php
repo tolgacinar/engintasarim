@@ -6,8 +6,8 @@ class Layout {
 	protected $data = [];
 
 	public function __construct() {
-        $this->ci =& get_instance();
-        $this->data["page_title"] = "Site Başlığı";
+		$this->ci =& get_instance();
+		$this->data["page_title"] = "Site Başlığı";
 	}
 
 	public function render_admin($view, $data = []) {
@@ -21,8 +21,15 @@ class Layout {
 		$this->ci->twig->display("template", $template_data);
 	}
 
-	public function render_site() {
+	public function render_site($view, $data = []) {
+		$this->data = array_merge($this->data, $data);
+		$template_data = [
+			"header"	=>	$this->ci->twig->render("includes/header", $this->data),
+			"content"	=>	$this->ci->twig->render("" . $view, $this->data),
+			"footer"	=>	$this->ci->twig->render("includes/footer", $this->data)
+		];
 
+		$this->ci->twig->display("template", $template_data);
 	}
 
 	public function json($status, $data) {

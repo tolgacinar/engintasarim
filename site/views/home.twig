@@ -1,0 +1,74 @@
+<div class="page-top">
+  <div class="page-top-box relative">
+    <div class="page-top-overlay absolute z-10"></div><img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80" alt="">
+    <div class="page-top-box-text absolute text-center flex flex-col items-center z-20">
+      <h1 class="relative">We Create Great Kitchens</h1><span class="block">Explore New Kitchens</span><a class="block" href="categories.html">Examine Now</a>
+    </div>
+    <div class="social-area absolute z-50">
+      <ul class="flex">
+        <li><a class="block" href="javascript:void(0);">Facebook</a></li>
+        <li><a class="block" href="javascript:void(0);">Twitter</a></li>
+        <li><a class="block" href="javascript:void(0);">Instagram</a></li>
+      </ul>
+    </div>
+    <div class="slip absolute z-20"><a class="flex flex-col items-center relative" href="#about">Start Exploring</a></div>
+  </div>
+</div>
+<div class="about" id="about">
+  <div class="container mx-auto flex items-start">
+    <div class="about-text flex flex-col items-start">
+      <div class="head relative z-0"><span class="block">About Us</span>
+        <h2 data-text="About Us">Who We Are</h2>
+      </div>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, vitae mollitia deleniti aperiam eos inventore facere optio illo modi fugit nihil. Quo aliquid labore quisquam.</p>
+      <p>Pellentesque feugiat ante turpis, et fringilla risus interdum at. Duis tempor egestas ante suscipit tempus. Quisque congue, magna posuere mollis fringilla, tortor ligula mollis velit, vel semper odio nibh id lorem. Sed ullamcorper, dui nec ullamcorper auctor, augue ipsum lobortis diam, vel maximus urna justo nec tellus. Ut elementum urna at mattis efficitur. Maecenas hendrerit, lacus nec volutpat elementum, elit odio tristique nunc, et fermentum ante odio at neque.</p><a class="block" href="about.html">Learn More</a>
+    </div>
+    <div class="about-image flex-shrink-0 relative lax"><img src="https://images.unsplash.com/photo-1578854888566-a4fde9f0b0e9?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80" alt=""></div>
+  </div>
+</div>
+<div class="kitchens">
+  <div class="head text-center relative z-0"><span class="block">Kitchens</span>
+    <h3 data-text="Collections">Collections</h3>
+  </div>
+  <div class="splide">
+    <div class="splide__track">
+      <ul class="splide__list">
+        <li class="flex-shrink-0 splide__slide">
+          <div class="kitchens-box"><a class="block" href="javascript:void(0);"><img src="https://images.unsplash.com/photo-1588854337236-6889d631faa8?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1350&amp;q=80" alt=""></a></div>
+        </li>
+        <li class="flex-shrink-0 splide__slide">
+          <div class="kitchens-box"><a class="block" href="javascript:void(0);"><img src="https://images.unsplash.com/photo-1556912167-f556f1f39fdf?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1360&amp;q=80" alt=""></a></div>
+        </li>
+        <li class="flex-shrink-0 splide__slide">
+          <div class="kitchens-box"><a class="block" href="javascript:void(0);"><img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1350&amp;q=80" alt=""></a></div>
+        </li>
+        <li class="flex-shrink-0 splide__slide">
+          <div class="kitchens-box"><a class="block" href="javascript:void(0);"><img src="https://images.unsplash.com/photo-1560562125-ab512e4d9d29?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1349&amp;q=80" alt=""></a></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% if categories %}
+  <div class="categories">
+    <div class="container mx-auto">
+      <div class="head text-center relative z-0"><span class="block">Categories</span>
+        <h4 data-text="Categories">Categories</h4>
+      </div>
+      <ul class="flex flex-wrap relative">
+        {% for category in categories %}
+          <li class="w-1/2">
+            <a class="block" href="#">
+              <div class="categories-box relative"><img src="{{ base_url("uploads/#{category.category_image}") }}" alt="{{ category.category_title }} Görseli">
+                <div class="categories-box-on absolute flex flex-col justify-end">
+                  <span class="block">DIANA</span>
+                  <h5>{{ category.category_title }}</h5>
+                </div>
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
