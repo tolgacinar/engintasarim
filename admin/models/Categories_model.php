@@ -199,6 +199,34 @@ class Categories_model extends CI_Model {
 		}
 	}
 
+	/**
+	 * deleteCategory
+	 *
+	 * Bu fonksiyon ile mevcut bir kategoriyi silebilirsiniz.
+	 *
+	 * @access	public
+	 * @return	object	
+	 */
+
+	public function deleteCategory($category_id) {
+		$subs = $this->db->get_where("categories", ['category_parent' => $category_id])->result();
+		$subs[] = $this->getCategory($category_id);
+		foreach ($subs as $key => $value) {
+			@unlink(FCPATH . "uploads/" . $value->category_image);
+		}
+		$this->db->trans_begin();
+		$this->db->delete("categories", ['category_id' => $category_id]);
+		$this->db->delete("categories", ['category_parent' => $category_id]);
+		if ($this->db->trans_status() === FALSE) {
+			$this->message = "Veritabanı hatası";
+			$this->db->trans_rollback();
+		} else {
+			$this->message = "Başarılı";
+			$this->db->trans_commit();
+			return true;
+		}
+	}
+
 }
 
 /* End of file Categories_model.php */

@@ -10,7 +10,8 @@ class Categories extends CI_Controller {
 
 	public function index() {
 		$data = [
-			"categories"	=>	$this->categories->getAllCategories()
+			"categories"	=>	$this->categories->getAllCategories(),
+			"message"			=>	$this->session->flashdata('message') ? $this->session->flashdata('message') : ""
 		];
 
 		$this->layout->render_admin("categories/list", $data);
@@ -47,6 +48,14 @@ class Categories extends CI_Controller {
 		}
 	}
 
+	public function delete($category_id) {
+		if ($this->categories->deleteCategory($category_id)) {
+			$this->session->set_flashdata('message', '<div class="badge flex success mt-3"><span class="block">Kayıtlar başarıyla silindi.</span></div>');
+		}else {
+			$this->session->set_flashdata('message', '<div class="badge flex error mt-3"><span class="block">Kayıtlar silinemedi.</span></div>');
+		}
+		redirect(base_url("admin/categories"));
+	}
 }
 
 /* End of file Categories.php */
