@@ -454,7 +454,7 @@ img {
 }
 
 .content {
-  margin: 0 300px 0 270px;
+  margin: 0 0 0 270px;
   padding: 60px;
   overflow: hidden;
   min-height: 100vh;

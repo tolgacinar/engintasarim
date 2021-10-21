@@ -10,6 +10,7 @@ class Layout {
 	}
 
 	public function render_admin($view, $data = []) {
+		$this->data = array_merge($this->data, $data);
 		$template_data = [
 			"header"	=>	$this->ci->twig->render("includes/header", $this->data),
 			"content"	=>	$this->ci->twig->render("" . $view, $this->data),

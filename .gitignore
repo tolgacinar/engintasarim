@@ -15,8 +15,12 @@ user_guide_src/cilexer/dist/*
 user_guide_src/cilexer/pycilexer.egg-info/*
 
 #codeigniter 3
-application/logs/*
-!application/logs/index.html
-!application/logs/.htaccess
+system/application/config/database.php
+system/application/logs/*
+!system/application/logs/index.html
+!system/application/logs/.htaccess
+system/application/cache/*
+!system/application/cache/index.html
+!system/application/cache/.htaccess
 system/codeigniter/vendor/
 composer.lock
