@@ -86,7 +86,8 @@ class Twig
 		}
 		else
 		{
-			$this->paths = [VIEWPATH];
+			$this->ci =& get_instance();
+			$this->paths = [str_replace("system\application", $this->ci->router->module, VIEWPATH)];
 		}
 
 		// default Twig config
