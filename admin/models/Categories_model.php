@@ -3,6 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Categories_model extends CI_Model {
 
+	protected $subcategories;
+	protected $parent_categories;
+
 	/**
 	 * getAllCategories
 	 *
@@ -12,14 +15,53 @@ class Categories_model extends CI_Model {
 	 * @return	object	
 	 */
 
-	public function getAllCategories() {
-		$categories = $this->db->get_where("categories")->result();
+	public function getCategory($category_id) {
+		return $this->db->get_where("categories", ['category_id' => $category_id])->row();
+	}
 
-		foreach ($categories as $key => $value) {
-			$categories[$key]->category_status = $this->checkStatus($value->category_status);
+	/**
+	 * getAllCategories
+	 *
+	 * Bu fonksiyon ile bütün kategorileri ekrana bastırabiliriz.
+	 *
+	 * @access	public
+	 * @return	object	
+	 */
+
+	public function getAllCategories($not = NULL) {
+		if ($not) {
+			$this->db->where("category_id !=", $not);
 		}
+		$this->db->order_by("category_order", "asc");
+		$categories = $this->db->get_where("categories", ["category_parent" => 0])->result();
+		$return = [];
+		foreach ($categories as $key => $value) {
+			$value->category_status = $this->checkStatus($value->category_status);
+			$value->category_parent = "Üst Kategori Yok";
+			$return[] = $value;
+			foreach ($this->getSubCategories($value->category_id) as $k => $v) {
+				$return[] = $v;
+				$v->category_status = $this->checkStatus($v->category_status);
+				$v->category_parent = $this->getCategory($v->category_parent)->category_title;
+			}
+		}
+		
+		return $return;
+	}
 
-		return $categories;
+	/**
+	 * getSubCategories
+	 *
+	 * Bu fonksiyon ile bütün kategoriye ait alt kategorileri listeleyebilirsiniz.
+	 *
+	 * @access	public
+	 * @param	int		category_id
+	 * @return	object	
+	 */
+
+	public function getSubCategories($category_id) {
+		$this->db->order_by("category_order", "asc");
+		return $this->db->get_where("categories", ["category_parent" => $category_id])->result();
 	}
 
 	/**
@@ -34,6 +76,127 @@ class Categories_model extends CI_Model {
 
 	private function checkStatus($status) {
 		return $status == '1' ? '<div class="badge success flex"><span class="block">Aktif</span></div>' : '<div class="badge error flex"><span class="block">Pasif</span></div>';
+	}
+
+	/**
+	 * createCategory
+	 *
+	 * Bu fonksiyon ile yeni bir kategori oluşturabilirsiniz.
+	 *
+	 * @access	public
+	 * @return	object	
+	 */
+
+	public function createCategory() {
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('category_title', 'Kategori Başlığı', 'trim|required');
+		$this->form_validation->set_rules('category_description', 'Kategori Başlığı', 'trim|required');
+		if ($_FILES['category_image']['error'] > 0) {
+			$this->form_validation->set_rules('category_image', 'Kategori Görseli', 'trim|required');
+		}
+		if ($this->form_validation->run() == FALSE) {
+			$this->message = validation_errors();
+			return false;
+		} else {
+			$config['upload_path']          = './uploads/';
+			$config['encrypt_name']			= TRUE;
+			$config['allowed_types']        = 'gif|jpg|png';
+			$config['max_size']             = 2048;
+			$config['max_width']            = 800;
+			$config['max_height']           = 800;
+			$insertData = [
+				"category_parent"		=>	$this->input->post("category_parent") ? (int) $this->input->post("category_parent", TRUE) : 0,
+				"category_title"		=>	$this->input->post("category_title", TRUE),
+				"category_description"	=>	$this->input->post("category_description", TRUE),
+				"category_order"		=>	(int) $this->input->post("category_order", TRUE),
+				"category_status"		=>	(int) $this->input->post("category_status", TRUE),
+			];
+
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload('category_image')) {
+				$this->message = $this->upload->display_errors();
+				return false;
+			}else {
+				$insertData['category_image'] = $this->upload->data("file_name");
+			}
+			$this->db->trans_begin();
+			$this->db->insert("categories", $insertData);
+			$id = $this->db->insert_id();
+			$this->db->update("categories", ['category_sef' => permalink($this->input->post("category_title", TRUE) . "-" . $id)], ['category_id' => $id]);
+			if ($this->db->trans_status() === FALSE) {
+				$this->message = "Veritabanı hatası";
+				$this->db->trans_rollback();
+			} else {
+				$this->message = "Başarılı";
+				$this->category_id = $id;
+				$this->category_title = $this->input->post("category_title", TRUE);
+				$this->db->trans_commit();
+				return true;
+			}
+		}
+	}
+
+	/**
+	 * createCategory
+	 *
+	 * Bu fonksiyon ile yeni bir kategori oluşturabilirsiniz.
+	 *
+	 * @access	public
+	 * @return	object	
+	 */
+
+	public function editCategory($category_id) {
+		$category = $this->getCategory($category_id);
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('category_title', 'Kategori Başlığı', 'trim|required');
+		$this->form_validation->set_rules('category_description', 'Kategori Başlığı', 'trim|required');
+		if ($this->form_validation->run() == FALSE) {
+			$this->message = validation_errors();
+			return false;
+		} else {
+			$updateData = [
+				"category_parent"		=>	$this->input->post("category_parent") ? (int) $this->input->post("category_parent", TRUE) : 0,
+				"category_title"		=>	$this->input->post("category_title", TRUE),
+				"category_description"	=>	$this->input->post("category_description", TRUE),
+				"category_order"		=>	(int) $this->input->post("category_order", TRUE),
+				"category_status"		=>	(int) $this->input->post("category_status", TRUE),
+			];
+
+			if ($category->category_title != $this->input->post("category_title", TRUE)) {
+				$updateData['category_sef'] = permalink($this->input->post("category_title", TRUE)) . "-" . $category_id;
+			}
+
+			if ($_FILES['category_image']['error'] == 0) {
+				$config['upload_path']          = './uploads/';
+				$config['encrypt_name']			= TRUE;
+				$config['allowed_types']        = 'gif|jpg|png';
+				$config['max_size']             = 2048;
+				$config['max_width']            = 800;
+				$config['max_height']           = 800;
+
+				$this->load->library('upload', $config);
+				if(!$this->upload->do_upload('category_image')) {
+					$this->message = $this->upload->display_errors();
+					return false;
+				}else {
+					@unlink(FCPATH . "uploads/" . $category->category_image);
+					$updateData['category_image'] = $this->upload->data("file_name");
+				}
+			}
+
+
+			
+			$this->db->trans_begin();
+			$this->db->update("categories", $updateData, ['category_id' => $category_id]);
+			if ($this->db->trans_status() === FALSE) {
+				$this->message = "Veritabanı hatası";
+				$this->db->trans_rollback();
+			} else {
+				$this->message = "Başarılı";
+				$this->db->trans_commit();
+				return true;
+			}
+		}
 	}
 
 }

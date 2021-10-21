@@ -1087,11 +1087,12 @@ img {
   font-weight: 400;
 }
 
-.process-buttons button {
+.process-buttons button, .process-buttons a {
   padding: 5px 15px;
+  cursor: pointer;
 }
 
-.process-buttons button svg {
+.process-buttons button svg, .process-buttons a svg {
   width: 20px;
   height: 20px;
   color: #607192;
@@ -1102,7 +1103,7 @@ img {
   transition: all 0.3s ease-in-out;
 }
 
-.process-buttons button:hover svg {
+.process-buttons button:hover svg, .process-buttons a:hover svg {
   color: #0F5EF7;
 }
 
@@ -1207,7 +1208,7 @@ img {
   color: #607192;
 }
 
-.form-element button {
+.form-element button, .form-element a {
   padding: 12px 20px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -1226,13 +1227,13 @@ img {
   box-shadow: rgba(18, 25, 37, 0.05) 0px 1px 2px 0px;
 }
 
-.form-element button.button-first {
+.form-element button.button-first, .form-element a.button-first {
   color: #fff;
   background: #0F5EF7;
   border-color: transparent;
 }
 
-.form-element button:nth-child(n+2) {
+.form-element button:nth-child(n+2), .form-element a:nth-child(n+2) {
   margin: 0 0 0 15px;
 }
 

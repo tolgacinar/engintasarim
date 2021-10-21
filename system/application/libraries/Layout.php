@@ -7,6 +7,7 @@ class Layout {
 
 	public function __construct() {
         $this->ci =& get_instance();
+        $this->data["page_title"] = "Site Başlığı";
 	}
 
 	public function render_admin($view, $data = []) {
@@ -22,6 +23,17 @@ class Layout {
 
 	public function render_site() {
 
+	}
+
+	public function json($status, $data) {
+		$return = [];
+		$return['status'] = $status;
+		$return = array_merge($return, $data);
+		$this->ci->output->set_content_type('application/json')->set_output(json_encode($return));
+	}
+
+	public function title($title) {
+		$this->data['page_title'] = $title . " | " . $this->data['page_title'];
 	}
 
 }

@@ -42,7 +42,7 @@
     </div>
     <div class="dashboard-header-action">
       <div class="form-element">
-        <button class="button-first focus:outline-none">Yeni Kategori</button>
+        <a href="{{ base_url('admin/categories/create') }}" class="button-first focus:outline-none">Yeni Kategori</a>
       </div>
     </div>
   </div>
@@ -65,6 +65,8 @@
         <tr>
           <th>Kategori Başlığı</th>
           <th>Kategori Durumu</th>
+          <th>Üst Kategori</th>
+          <th>Kategori Sıralama</th>
           <th>İşlem</th>
         </tr>
       </thead>
@@ -74,23 +76,27 @@
             <td>
               <div class="product-box flex items-center">
                 <div class="product-box-image">
-                  <a class="block" href="#">
-                    <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1267&amp;q=80" alt="" />
-                  </a>
+                  {% if category.category_image %}
+                    <a class="block" href="#">
+                      <img src="/uploads/{{ category.category_image }}" alt="" />
+                    </a>
+                  {% endif %}
                 </div>
                 <div class="product-box-content">
                   <span class="block">{{ category.category_title }}</span>
                 </div>
               </div>
             </td>
+            <td>{{ category.category_parent }}</td>
             <td>{{ category.category_status|raw }}</td>
+            <td>{{ category.category_order }}</td>
             <td>
              <div class="process-buttons flex">
-              <button class="focus:outline-none">
+              <a class="focus:outline-none" href='{{ base_url("admin/categories/edit/#{ category.category_id }") }}'>
                 <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                 </svg>
-              </button>
+              </a>
               <button class="focus:outline-none">
                 <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="3 6 5 6 21 6"></polyline>

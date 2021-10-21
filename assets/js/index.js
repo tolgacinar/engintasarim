@@ -12,6 +12,7 @@ $(document).ready(function () {
     lengthChange: false,
     info: false,
     paging: false,
+    order: false,
   });
 
   $(".table-list-header-input input").keyup(function () {
