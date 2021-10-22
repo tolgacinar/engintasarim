@@ -7,6 +7,10 @@ class Admin extends CI_Controller {
 		$this->layout->render_admin("dashboard", []);
 	}
 
+	public function index() {
+		redirect(base_url("admin/dashboard"));
+	}
+
 }
 
 /* End of file Admin.php */
