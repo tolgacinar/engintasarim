@@ -5,6 +5,7 @@ class Categories_model extends CI_Model {
 
 	protected $subcategories;
 	protected $parent_categories;
+	public $categories;
 
 	/**
 	 * getAllCategories
@@ -33,20 +34,63 @@ class Categories_model extends CI_Model {
 			$this->db->where("category_id !=", $not);
 		}
 		$this->db->order_by("category_order", "asc");
-		$categories = $this->db->get_where("categories", ["category_parent" => 0])->result();
-		$return = [];
+		$categories = $this->db->get_where("categories")->result();
 		foreach ($categories as $key => $value) {
-			$value->category_status = $this->checkStatus($value->category_status);
-			$value->category_parent = "Üst Kategori Yok";
-			$return[] = $value;
-			foreach ($this->getSubCategories($value->category_id) as $k => $v) {
-				$return[] = $v;
-				$v->category_status = $this->checkStatus($v->category_status);
-				$v->category_parent = $this->getCategory($v->category_parent)->category_title;
+			$categories[$key]->category_status = $this->checkStatus($value->category_status);
+			$categories[$key]->category_parent = $value->category_parent == 0 ? "Üst Kategori Yok" : $this->getCategory($value->category_parent)->category_title;
+		}
+		$this->drawCategory($this->orderCategories($categories));
+
+		return $this->categories;
+	}
+
+	/**
+	 * orderCategories
+	 *
+	 * Bu fonksiyon ile bütün kategorileri hiyerarşik sıraya sokabilirsiniz.
+	 *
+	 * @access	public
+	 * @param	array	category_list
+	 * @param 	int 	parent_id
+	 * @return	object	
+	 */
+
+	public function orderCategories($categories, $parent_id = 0) {
+		$ordered = [];
+		foreach ($categories as $category) {
+			if ($category->category_parent == $parent_id) {
+				$children = $this->orderCategories($categories, $category->category_id);
+				if ($children) {
+					$category->children = $children;
+				}else {
+					$category->children = [];
+				}
+
+				$ordered[] = $category;
+			}
+		}	
+
+		return $ordered;
+	}
+
+	/**
+	 * drawCategories
+	 *
+	 * Bu fonksiyon ile sıralanmış kategorileri array haline getirebilirsiniz.
+	 *
+	 * @access	public
+	 * @param	array	category_list
+	 * @param 	int 	parent_id
+	 * @return	object	
+	 */
+
+	public function drawCategory($categories) {
+		foreach ($categories as $key => $value) {
+			$this->categories[] = $value;
+			if (!empty($value->children)) {
+				$this->drawCategory($value->children);
 			}
 		}
-		
-		return $return;
 	}
 
 	/**
