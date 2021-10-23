@@ -2,7 +2,7 @@
   <div class="page-top-box relative">
     <div class="page-top-overlay absolute z-10"></div><img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80" alt="">
     <div class="page-top-box-text absolute text-center flex flex-col items-center z-20">
-      <h1 class="relative">We Create Great Kitchens</h1><span class="block">Explore New Kitchens</span><a class="block" href="categories.html">Examine Now</a>
+      <h1 class="relative">We Create Great Kitchens</h1><span class="block">Explore New Kitchens</span><a class="block" href="{{ base_url("categories") }}">Examine Now</a>
     </div>
     <div class="social-area absolute z-50">
       <ul class="flex">
@@ -58,7 +58,7 @@
       <ul class="flex flex-wrap relative">
         {% for category in categories %}
           <li class="w-1/2">
-            <a class="block" href="#">
+            <a class="block" href="{{ base_url("category/#{category.category_sef}") }}">
               <div class="categories-box relative"><img src="{{ base_url("uploads/#{category.category_image}") }}" alt="{{ category.category_title }} Görseli">
                 <div class="categories-box-on absolute flex flex-col justify-end">
                   <span class="block">DIANA</span>
