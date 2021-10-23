@@ -1,0 +1,46 @@
+<div class="page-top in-page">
+  <div class="page-top-box relative">
+    <div class="page-top-overlay absolute z-10"></div>
+    <img src="{{ base_url("uploads/#{category.category_image}") }}" alt="{{ category.category_title }} Görseli">
+  </div>
+</div>
+<div class="products">
+  <div class="container mx-auto">
+    <div class="head text-center relative z-0">
+      <h1 style="margin:0;">{{ category.category_title }}</h1>
+      <span class="block">Subcategories</span>
+    </div>
+    <ul class="flex flex-wrap">
+      {% if subcategories %}
+
+        {% for subcategory in subcategories %}
+          <li class="w-1/4">
+            <a class="block" href="{{ base_url("category/#{subcategory.category_sef}") }}">
+              <div class="products-box">
+                <div class="products-box-image">
+                  <img src="{{ base_url("uploads/#{subcategory.category_image}") }}" style="width:100%;height:auto;object-fit:cover;" alt="{{ subcategory.category_title}} Görseli">
+                </div>
+                <div class="products-box-text">
+                  <span class="block">{{ subcategory.category_title }}</span>
+                </div>
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      {% else %}
+        Kategoriye ait alt kategori bulunamadı.
+      {% endif %}
+
+    </ul>
+  </div>
+</div>
+<div class="products" style="padding-top:25px;">
+  <div class="container mx-auto">
+    <div class="head text-center relative z-0">
+      <span class="block">Products</span>
+    </div>
+    <ul class="flex flex-wrap">
+      Kategori ürünleri burada listelenir
+    </ul>
+  </div>
+</div>

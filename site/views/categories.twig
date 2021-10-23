@@ -1,0 +1,27 @@
+<div class="page-top in-page">
+  <div class="page-top-box relative">
+    <div class="page-top-overlay absolute z-10"></div><img src="https://images.unsplash.com/photo-1512916194211-3f2b7f5f7de3?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1350&amp;q=80" alt="">
+  </div>
+</div>
+<div class="categories categories-page">
+  <div class="container mx-auto">
+    <div class="head text-center relative z-0"><span class="block">Categories</span>
+      <h1>Categories</h1>
+    </div>
+    <ul class="flex flex-wrap relative">
+      {% for category in categories %}
+       <li class="w-1/2">
+        <a class="block" href="{{ base_url("category/#{category.category_sef}") }}">
+          <div class="categories-box relative">
+            <img src="{{ base_url("uploads/#{category.category_image}") }}" alt="{{ category.category_title }} Görseli">
+            <div class="categories-box-on absolute flex flex-col justify-end">
+              <span class="block">Modern</span>
+              <h5>{{ category.category_title }}</h5>
+            </div>
+          </div>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+</div>
