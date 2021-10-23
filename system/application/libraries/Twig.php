@@ -87,7 +87,7 @@ class Twig
 		else
 		{
 			$this->ci =& get_instance();
-			$this->paths = [str_replace("system\application", $this->ci->router->module, VIEWPATH)];
+			$this->paths = [str_replace("system" . DIRECTORY_SEPARATOR . "application", $this->ci->router->module, VIEWPATH)];
 		}
 
 		// default Twig config
